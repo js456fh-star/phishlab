@@ -1,0 +1,7 @@
+timestamp_utc,message_id,sender,sender_ip,recipient,subject,spf,dkim,dmarc,gateway_verdict,delivery
+2026-10-20T13:02:17Z,VM8842.20261020@halvorsen-frieght.com,voicemail@halvorsen-frieght[.]com,203.0.113.45,j.okafor@halvorsen-freight.com,New voicemail (0:48) from +1 (416) 555-0119 — action required,pass,pass,pass,deliver,inbox
+2026-10-20T13:02:41Z,VM8842.20261020@halvorsen-frieght.com,voicemail@halvorsen-frieght[.]com,203.0.113.45,m.brandt@halvorsen-freight.com,New voicemail (0:48) from +1 (416) 555-0119 — action required,pass,pass,pass,deliver,inbox
+2026-10-20T13:02:55Z,VM8842.20261020@halvorsen-frieght.com,voicemail@halvorsen-frieght[.]com,203.0.113.45,s.nakamura@halvorsen-freight.com,New voicemail (0:48) from +1 (416) 555-0119 — action required,pass,pass,pass,deliver,inbox
+2026-10-20T13:03:10Z,VM8842.20261020@halvorsen-frieght.com,voicemail@halvorsen-frieght[.]com,203.0.113.45,r.castillo@halvorsen-freight.com,New voicemail (0:48) from +1 (416) 555-0119 — action required,pass,pass,pass,deliver,inbox
+2026-10-20T13:48:33Z,INT-fwd-5521@halvorsen-freight.com,j.okafor@halvorsen-freight.com,10.20.0.21,r.castillo@halvorsen-freight.com,FW: New voicemail (0:48) — is this legit?,pass,pass,pass,deliver,inbox
+2026-10-20T15:22:05Z,AP-INV-33817@halvorsen-frieght[.]com,a.lindqvist@halvorsen-freight.com,198.51.100.77,external-vendor-payments@mail.halvorsen-frieght[.]com,RE: Updated remittance / banking details Q4,none,fail,fail,deliver,inbox

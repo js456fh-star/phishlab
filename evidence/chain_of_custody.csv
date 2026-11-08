@@ -1,0 +1,8 @@
+evidence_id,artifact,collected_by,collected_utc,sha256_original,storage,notes
+EV-001,01_lure_voicemail.eml,soc-analyst-l1,2026-10-20T14:20:00Z,a1f9c3e28b7d4455aa10934c77e5b1902d4471cc83f2aa90ee1b55d0c7,vault://cases/PL-2026-1020/,Original phishing email pulled from victim mailbox via eDiscovery
+EV-002,qr_voicemail.png,soc-analyst-l2,2026-10-20T14:35:00Z,4b2e7711aa9f0c3d5e6f88123456789abcdef0123456789abcdef0123456,vault://cases/PL-2026-1020/,QR decoded offline on isolated VM
+EV-003,03_user_report.txt,soc-analyst-l1,2026-10-20T14:11:02Z,c70dd11223344556677889900aabbccddeeff00112233445566778899aa,vault://cases/PL-2026-1020/,User-reported via Report Phishing button
+EV-004,email_gateway_messagetrace.csv,soc-analyst-l2,2026-10-20T16:05:00Z,2fa4b9e0011223344556677889900aabbccddeeff0011223344556677889,vault://cases/PL-2026-1020/,Exported from secure email gateway
+EV-005,entra_signin_logs.json,ir-lead,2026-10-20T16:30:00Z,9c1d2e3f4a5b6c7d8e9f00112233445566778899aabbccddeeff00112233,vault://cases/PL-2026-1020/,Entra sign-in logs via Graph API
+EV-006,m365_unified_audit.json,ir-lead,2026-10-20T16:45:00Z,7e6d5c4b3a29180716253443516273849506172839405162738495061728,vault://cases/PL-2026-1020/,Unified Audit Log via Purview
+EV-007,inbox_rule_detail,ir-lead,2026-10-20T15:55:00Z,0011223344556677889900aabbccddeeff00112233445566778899aabbcc,vault://cases/PL-2026-1020/,Mailbox rule '.' captured before removal

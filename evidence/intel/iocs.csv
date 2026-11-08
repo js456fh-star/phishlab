@@ -1,0 +1,11 @@
+type,value,context,confidence,first_seen,mitre
+domain,halvorsen-frieght[.]com,Typosquat sender/landing domain (ie->ei),high,2026-10-20T13:02:14Z,T1566.002
+host,voicemail-portal.halvorsen-frieght[.]com,AiTM landing host in QR payload,high,2026-10-20T13:47:00Z,T1566.002
+ipv4,203.0.113.45,Phishing MTA (sent the lure),high,2026-10-20T13:02:17Z,T1566
+ipv4,198.51.100.77,AiTM reverse proxy (token capture),high,2026-10-20T13:49:51Z,T1557
+ipv4,192.0.2.150,Attacker token-replay / BEC origin,high,2026-10-20T14:58:12Z,T1078.004
+email,voicemail@halvorsen-frieght[.]com,Spoofed unified-messaging sender,high,2026-10-20T13:02:14Z,T1566.002
+email,external-vendor-payments@mail.halvorsen-frieght[.]com,Silent-forward exfil + BEC reply address,high,2026-10-20T15:21:30Z,T1114.003
+inboxrule,name="." move->RSS Subscriptions,Evidence-hiding mail rule,high,2026-10-20T15:01:22Z,T1564.008
+useragent,Chrome 118 on Linux,Non-corporate agent used by proxy+attacker,medium,2026-10-20T13:49:51Z,T1557
+url_param,u=<base64url email>,Pre-filled victim identity in landing URL,medium,2026-10-20T13:02:14Z,T1566.002

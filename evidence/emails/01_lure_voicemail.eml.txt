@@ -1,0 +1,55 @@
+=== DEFANGED EVIDENCE COPY — NOT A LIVE EMAIL ===
+All URLs/domains are neutralized (hxxps, [.]). Fictional scenario.
+Original .eml preserved in evidence vault; this text copy is for analysis.
+Evidence ID: EV-001   SHA256 (original .eml): a1f9...c7 (see chain_of_custody.csv)
+=================================================
+
+Return-Path: <bounce-7731@mail.halvorsen-frieght[.]com>
+Received: from mx-in-02.halvorsen-freight.com (10.20.0.12)
+    by exch-01.halvorsen-freight.com (10.20.0.21) with ESMTPS;
+    Tue, 20 Oct 2026 13:02:19 +0000
+Received: from mail.halvorsen-frieght[.]com (mail.halvorsen-frieght[.]com [203.0.113.45])
+    by mx-in-02.halvorsen-freight.com (Postfix) with ESMTPS id 4Hq2bK1zZQ;
+    Tue, 20 Oct 2026 13:02:17 +0000
+Received: from [10.8.3.7] (unknown [192.0.2.150])
+    by mail.halvorsen-frieght[.]com (Postfix) with ESMTPSA id 1A2B3C;
+    Tue, 20 Oct 2026 13:02:14 +0000
+Authentication-Results: mx-in-02.halvorsen-freight.com;
+    spf=pass (sender IP is 203.0.113.45) smtp.mailfrom=mail.halvorsen-frieght[.]com;
+    dkim=pass header.d=halvorsen-frieght[.]com;
+    dmarc=pass action=none header.from=halvorsen-frieght[.]com;
+    compauth=pass reason=100
+From: "Unified Messaging" <voicemail@halvorsen-frieght[.]com>
+Reply-To: <no-reply@halvorsen-frieght[.]com>
+To: "Joshua Okafor" <j.okafor@halvorsen-freight.com>
+Subject: New voicemail (0:48) from +1 (416) 555-0119 — action required
+Date: Tue, 20 Oct 2026 13:02:14 +0000
+Message-ID: <VM8842.20261020@halvorsen-frieght[.]com>
+X-Mailer: PhishKit (redacted)
+Content-Type: multipart/related; boundary="b0undary"
+
+--b0undary
+Content-Type: text/html; charset="utf-8"
+
+[HTML body rendered to analyst]:
+  "You have 1 new voicemail message. Scan the secure QR code below with your
+   mobile device to listen. This link expires in 24 hours."
+  [EMBEDDED IMAGE: qr_voicemail.png  -> see 02_qr_payload.txt for decoded value]
+  Halvorsen Freight — Unified Messaging  (spoofed footer/logo)
+
+--b0undary
+Content-Type: image/png; name="qr_voicemail.png"
+Content-Disposition: inline; filename="qr_voicemail.png"
+Content-ID: <qr8842>
+[PNG BYTES OMITTED IN DEFANGED COPY — decoded payload in 02_qr_payload.txt]
+--b0undary--
+
+--- ANALYST NOTES (added during triage) ---
+* Sender domain halvorsen-frieght[.]com is a TYPOSQUAT of halvorsen-freight.com
+  (letters 'ie' transposed to 'ei'). SPF/DKIM/DMARC all PASS — but for the
+  LOOK-ALIKE domain, not the real one. This is the classic trap: "auth passed"
+  != "legitimate sender."
+* No clickable link in the body. The payload is a QR code (quishing), which
+  routes the victim onto a personal phone, bypassing the email gateway's URL
+  rewriting/sandboxing. This is the novel delivery vector for this case.
+* Lure theme: voicemail + urgency + 24h expiry.

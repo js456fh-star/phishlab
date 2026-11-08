@@ -1,0 +1,47 @@
+title: Suspicious Inbox Rule Hiding Security/Finance Mail
+id: 7c1e2a90-4f3b-4d21-9a7e-paperlantern01
+status: experimental
+description: >
+  Detects creation of a mailbox inbox rule that moves or deletes messages
+  matching security/finance keywords, or whose name is blank/near-invisible
+  (single '.', single space). Classic post-ATO evidence-hiding and BEC enabler.
+author: PAPER LANTERN lab
+date: 2026/10/21
+references:
+  - https://attack.mitre.org/techniques/T1564/008/
+logsource:
+  product: m365
+  service: exchange
+detection:
+  selection_op:
+    Operation:
+      - 'New-InboxRule'
+      - 'Set-InboxRule'
+  selection_hide:
+    Parameters|contains:
+      - 'DeleteMessage'
+      - 'MoveToFolder'
+  selection_keywords:
+    Parameters|contains:
+      - 'invoice'
+      - 'remittance'
+      - 'payment'
+      - 'wire'
+      - 'bank'
+      - 'fraud'
+      - 'phish'
+      - 'security'
+  selection_stealth_name:
+    Parameters|re: '"Name"\s*:\s*"(\.|\s|)"'
+  condition: selection_op and selection_hide and (selection_keywords or selection_stealth_name)
+fields:
+  - UserId
+  - ClientIP
+  - Parameters
+falsepositives:
+  - Legitimate user-built rules that sort finance mail (rare with stealth names)
+level: high
+tags:
+  - attack.defense_evasion
+  - attack.t1564.008
+  - attack.collection

@@ -1,0 +1,24 @@
+=== DECODED QR PAYLOAD — EV-002 (DEFANGED) ===
+Source image : qr_voicemail.png (embedded in EV-001)
+Decode method: offline zbarimg on an isolated VM (image never opened on a phone)
+
+Decoded value (defanged):
+  hxxps://voicemail-portal.halvorsen-frieght[.]com/vm/listen?id=8842&u=ai5va2Fmb3JAaGFsdm9yc2VuLWZyZWlnaHQuY29t
+
+Analyst decode of the 'u' parameter:
+  ai5va2Fmb3JAaGFsdm9yc2VuLWZyZWlnaHQuY29t  (base64url)
+   -> j.okafor@halvorsen-freight.com
+  => The victim's email is pre-filled into the landing page. This is a
+     targeted AiTM (adversary-in-the-middle) kit — it pre-populates the
+     username so the fake Microsoft login looks seamless and only asks for
+     the password + MFA code.
+
+Infrastructure notes:
+  Host  voicemail-portal.halvorsen-frieght[.]com resolves to 198.51.100.77
+  198.51.100.77  = AiTM reverse proxy (Evilginx-style). Relays creds + session
+                   cookie to the real Microsoft endpoint in real time, so MFA
+                   is satisfied and the attacker captures the resulting
+                   session token.
+
+DO NOT BROWSE THIS HOST. For the lab it does not resolve publicly; treat as
+sinkhole-only. Pivot on the IP/domain via passive DNS, never active visit.

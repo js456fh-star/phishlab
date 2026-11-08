@@ -1,0 +1,12 @@
+=== USER PHISH REPORT — EV-003 ===
+Submitted via "Report Phishing" button by r.castillo@halvorsen-freight.com
+Timestamp: 2026-10-20 14:11:02 +0000
+
+Reporter message:
+  "Got a voicemail email with a QR code, looked off so I didn't scan it.
+   But heads up — Joshua in Logistics forwarded it to a few of us around 1pm
+   asking 'is this legit?' and I think he may have scanned his copy. His
+   Teams status went weird after that (signed out then back in)."
+
+SOC intake tags: quishing, voicemail-lure, possible-victim:j.okafor, wave
+Triage priority: P2 -> escalated to P1 after EV-007 (new inbox rule) found.

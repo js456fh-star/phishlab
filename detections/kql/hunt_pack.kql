@@ -1,0 +1,74 @@
+// =====================================================================
+// Operation PAPER LANTERN — KQL hunt pack (Microsoft Sentinel / Defender)
+// Quishing -> AiTM token theft -> ATO -> inbox-rule hiding -> BEC
+// All queries are read-only hunts. Tune time windows & tenant fields.
+// =====================================================================
+
+// ---------------------------------------------------------------------
+// 1. Look-alike / typosquat sender domains hitting the org
+//    (edit-distance style catch via common swaps; extend the list)
+// ---------------------------------------------------------------------
+let brand = "halvorsen-freight.com";
+EmailEvents
+| where Timestamp > ago(14d)
+| extend SenderDomain = tostring(split(SenderFromAddress, "@")[1])
+| where SenderDomain != brand
+| where SenderDomain has_any ("halvorsen", "frieght", "halvorsen-")   // fuzzy brand tokens
+| summarize Count=count(), Recipients=make_set(RecipientEmailAddress, 20)
+    by SenderDomain, SenderIPv4
+| order by Count desc
+
+// ---------------------------------------------------------------------
+// 2. QR-code / image-only phishing (quishing) — low text, image-heavy,
+//    voicemail/secure-message lures
+// ---------------------------------------------------------------------
+EmailEvents
+| where Timestamp > ago(14d)
+| where Subject has_any ("voicemail", "voice message", "secure message", "missed call")
+| join kind=inner (EmailAttachmentInfo
+    | where FileType in ("png","jpg","jpeg","gif","bmp")) on NetworkMessageId
+| summarize Attachments=count() by NetworkMessageId, Subject, SenderFromAddress, RecipientEmailAddress
+| where Attachments >= 1
+
+// ---------------------------------------------------------------------
+// 3. AiTM token replay — same user, MFA sign-in then token-only sign-in
+//    from a different country within a short window
+// ---------------------------------------------------------------------
+let win = 3h;
+SigninLogs
+| where TimeGenerated > ago(14d)
+| extend Country = tostring(LocationDetails.countryOrRegion)
+| project TimeGenerated, UserPrincipalName, IPAddress, Country,
+          AuthRequirement = AuthenticationRequirement,
+          Risk = RiskLevelDuringSignIn, Token = tostring(parse_json(AuthenticationProcessingDetails))
+| partition by UserPrincipalName
+  (
+    order by TimeGenerated asc
+    | extend prevCountry = prev(Country), prevIP = prev(IPAddress), prevTime = prev(TimeGenerated)
+    | where Country != prevCountry and isnotempty(prevCountry)
+    | where TimeGenerated - prevTime < win
+  )
+| where Risk in ("medium","high")
+| project UserPrincipalName, prevTime, prevIP, prevCountry, TimeGenerated, IPAddress, Country, Risk
+
+// ---------------------------------------------------------------------
+// 4. Evidence-hiding inbox rules (stealth name OR finance/security kw)
+// ---------------------------------------------------------------------
+CloudAppEvents
+| where Timestamp > ago(14d)
+| where ActionType in ("New-InboxRule","Set-InboxRule","UpdateInboxRules")
+| extend P = tostring(RawEventData.Parameters)
+| where P has_any ("invoice","remittance","payment","wire","bank","fraud","phish","security")
+     or P matches regex @'"Name"\s*:\s*"(\.|\s|)"'
+| where P has_any ("MoveToFolder","DeleteMessage","MarkAsRead")
+| project Timestamp, AccountDisplayName, ActionType, IPAddress = tostring(RawEventData.ClientIP), P
+
+// ---------------------------------------------------------------------
+// 5. Silent external forwarding set on a mailbox
+// ---------------------------------------------------------------------
+CloudAppEvents
+| where Timestamp > ago(14d)
+| where ActionType in ("Set-Mailbox","Set-MailboxAutoReplyConfiguration")
+| extend Fwd = tostring(RawEventData.Parameters)
+| where Fwd has_any ("ForwardingSmtpAddress","ForwardingAddress","DeliverToMailboxAndForward")
+| project Timestamp, AccountDisplayName, IPAddress = tostring(RawEventData.ClientIP), Fwd

@@ -1,0 +1,51 @@
+{
+  "_description": "Microsoft 365 Unified Audit Log excerpt (defanged). Post-compromise actions by the attacker using j.okafor's stolen token.",
+  "records": [
+    {
+      "CreationTime": "2026-10-20T14:59:03Z",
+      "Operation": "MailItemsAccessed",
+      "UserId": "j.okafor@halvorsen-freight.com",
+      "ClientIP": "192.0.2.150",
+      "ClientInfoString": "Client=OWA;Action=ViewItem",
+      "Folders": ["Inbox", "Sent Items"],
+      "_analyst_note": "Attacker reads mailbox, searching for finance/AP threads to hijack."
+    },
+    {
+      "CreationTime": "2026-10-20T15:01:22Z",
+      "Operation": "New-InboxRule",
+      "UserId": "j.okafor@halvorsen-freight.com",
+      "ClientIP": "192.0.2.150",
+      "Parameters": {
+        "Name": ".",
+        "FromAddressContainsWords": ["invoice", "remittance", "payment", "bank", "wire", "fraud", "phish", "security"],
+        "MoveToFolder": "RSS Subscriptions",
+        "MarkAsRead": true,
+        "StopProcessingRules": true
+      },
+      "_analyst_note": "CLASSIC hide-the-evidence rule. Name is a single '.' (near-invisible in Outlook). Auto-files any reply about invoices/fraud/security into RSS Subscriptions, marks read. Lets attacker run BEC undetected while victim never sees warning replies."
+    },
+    {
+      "CreationTime": "2026-10-20T15:04:55Z",
+      "Operation": "UpdateInboxRules",
+      "UserId": "j.okafor@halvorsen-freight.com",
+      "ClientIP": "192.0.2.150",
+      "_analyst_note": "Rule confirmed active."
+    },
+    {
+      "CreationTime": "2026-10-20T15:20:48Z",
+      "Operation": "Send",
+      "UserId": "j.okafor@halvorsen-freight.com",
+      "ClientIP": "192.0.2.150",
+      "Item": {"Subject": "RE: Updated remittance / banking details Q4", "To": ["a.lindqvist@halvorsen-freight.com"]},
+      "_analyst_note": "BEC payload: attacker emails Accounts Payable (a.lindqvist) from the victim's real account to change vendor banking details. Matches the outbound line in the message trace (EV message trace row 7)."
+    },
+    {
+      "CreationTime": "2026-10-20T15:21:30Z",
+      "Operation": "Set-Mailbox",
+      "UserId": "j.okafor@halvorsen-freight.com",
+      "ClientIP": "192.0.2.150",
+      "Parameters": {"ForwardingSmtpAddress": "external-vendor-payments@mail.halvorsen-frieght[.]com", "DeliverToMailboxAndForward": true},
+      "_analyst_note": "Stealth exfil: silent forwarding to the look-alike domain so attacker gets a copy of all replies even if kicked out."
+    }
+  ]
+}

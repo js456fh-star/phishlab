@@ -1,0 +1,42 @@
+title: AiTM Session Token Replay (MFA-less sign-in with refresh token)
+id: b93d77a1-0c22-4e18-8f5a-paperlantern02
+status: experimental
+description: >
+  Flags a sign-in that presents an existing primary refresh/session token
+  (singleFactor, no MFA challenge) from a new IP/ASN shortly after an
+  interactive MFA sign-in from a different IP. Signature of adversary-in-the-
+  middle session-cookie theft followed by replay.
+author: PAPER LANTERN lab
+date: 2026/10/21
+references:
+  - https://attack.mitre.org/techniques/T1557/
+  - https://attack.mitre.org/techniques/T1078/004/
+logsource:
+  product: azure
+  service: signinlogs
+detection:
+  selection:
+    AuthenticationRequirement: 'singleFactorAuthentication'
+    IncomingTokenType:
+      - 'primaryRefreshToken'
+      - 'sessionToken'
+  risk:
+    RiskLevelDuringSignIn:
+      - 'medium'
+      - 'high'
+    RiskEventTypes|contains:
+      - 'anomalousToken'
+      - 'unfamiliarFeatures'
+  condition: selection and risk
+fields:
+  - UserPrincipalName
+  - IPAddress
+  - Location
+  - IncomingTokenType
+falsepositives:
+  - Long-lived SSO tokens on trusted devices (tune with device/compliance join)
+level: high
+tags:
+  - attack.credential_access
+  - attack.t1557
+  - attack.t1078.004
